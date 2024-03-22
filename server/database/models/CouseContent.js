@@ -1,0 +1,34 @@
+const {DataTypes} = require('sequelize')
+const sequelize = require('../db')
+const Course = require("./Course");
+const ChapterGallery = require("./ChapterGallery");
+const UserCourseContent = require("./UserCourseContent");
+const User = require("./User");
+const Test = require("./Test");
+
+const CourseContent = sequelize.define('course_content', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    chapterName: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
+    chapterDescription: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    chapterContent: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    chapterImage: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    }
+})
+
+module.exports = CourseContent

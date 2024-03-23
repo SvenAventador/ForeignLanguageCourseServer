@@ -1,8 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const User = require("./User");
-const UserCourse = require("./UserCourse");
-const CourseContent = require("./CouseContent");
 
 const Course = sequelize.define('course', {
     id: {

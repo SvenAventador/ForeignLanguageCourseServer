@@ -1,9 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const Course = require("./Course");
-const UserCourse = require("./UserCourse");
-const CourseContent = require("./CouseContent");
-const UserCourseContent = require("./UserCourseContent");
 
 const User = sequelize.define('user', {
     id: {
@@ -24,6 +20,10 @@ const User = sequelize.define('user', {
     userPassword: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    userImage: {
+        type: DataTypes.TEXT,
+        allowNull: true
     },
     userRole: {
         type: DataTypes.ENUM(

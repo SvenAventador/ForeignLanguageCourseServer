@@ -1,6 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const CourseContent = require("./CouseContent");
 
 const ChapterGallery = sequelize.define('chapter_gallery', {
     id: {

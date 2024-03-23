@@ -1,7 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const Test = require("./Test");
-const TestAnswer = require("./TestAnswer");
 
 const TestQuestion = sequelize.define('test_question', {
     id: {

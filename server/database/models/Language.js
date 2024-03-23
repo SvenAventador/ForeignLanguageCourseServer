@@ -1,6 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const Course = require("./Course");
 
 const Language = sequelize.define('language', {
     id: {

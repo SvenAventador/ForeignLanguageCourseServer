@@ -1,10 +1,5 @@
 const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
-const Course = require("./Course");
-const ChapterGallery = require("./ChapterGallery");
-const UserCourseContent = require("./UserCourseContent");
-const User = require("./User");
-const Test = require("./Test");
 
 const CourseContent = sequelize.define('course_content', {
     id: {

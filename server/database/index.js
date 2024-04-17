@@ -7,7 +7,7 @@ const TestAnswer = require("./models/TestAnswer");
 const TestQuestion = require("./models/TestQuestion");
 const User = require("./models/User");
 const UserCourse = require("./models/UserCourse");
-const UserCourseContent = require("./models/UserCourseContent");
+const UserTest = require("./models/UserTest");
 const Duration = require("./models/Duration");
 const ChapterContent = require("./models/ChapterContent");
 
@@ -24,18 +24,18 @@ Course.belongsTo(Language)
 Duration.hasOne(Course)
 Course.belongsTo(Duration)
 
-CourseContent.belongsToMany(User, {
-    through: UserCourseContent
+Test.belongsToMany(User, {
+    through: UserTest
 })
-User.belongsToMany(CourseContent, {
-    through: UserCourseContent
+User.belongsToMany(Test, {
+    through: UserTest
 })
 
 CourseContent.hasMany(ChapterContent)
 ChapterContent.belongsTo(CourseContent)
 
-ChapterContent.hasMany(ChapterGallery)
-ChapterGallery.belongsTo(ChapterContent)
+CourseContent.hasMany(ChapterGallery)
+ChapterGallery.belongsTo(CourseContent)
 
 Course.hasMany(CourseContent)
 CourseContent.belongsTo(Course)
@@ -61,6 +61,6 @@ module.exports = {
     TestQuestion,
     User,
     UserCourse,
-    UserCourseContent
+    UserTest
 }
 

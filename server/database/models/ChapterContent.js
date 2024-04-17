@@ -9,8 +9,7 @@ const ChapterContent = sequelize.define('chapter_content', {
     },
     chapterContent: {
         type: DataTypes.TEXT,
-        allowNull: false,
-        unique: true
+        allowNull: false
     }
 })
 

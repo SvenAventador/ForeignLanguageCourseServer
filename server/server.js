@@ -12,6 +12,7 @@ app.use(express.json())
 app.use(cors())
 app.use(fileUpload({}))
 app.use(express.static(path.resolve(__dirname, 'static', 'img')))
+app.use(express.static(path.resolve(__dirname, 'static', 'vid')))
 app.use('/api', routes)
 
 const errorHandler = require('./middlewares/error')

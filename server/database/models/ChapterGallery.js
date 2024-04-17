@@ -10,10 +10,6 @@ const ChapterGallery = sequelize.define('chapter_gallery', {
     chapterGalleryContent: {
         type: DataTypes.TEXT,
         allowNull: false
-    },
-    isMainVideo: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
     }
 })
 

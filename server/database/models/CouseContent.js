@@ -9,7 +9,6 @@ const CourseContent = sequelize.define('course_content', {
     },
     chapterName: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false
     },
     chapterDescription: {

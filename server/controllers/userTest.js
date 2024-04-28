@@ -1,5 +1,9 @@
 const ErrorHandler = require("../errors/errorHandler");
-const {UserTest, Test, TestQuestion} = require("../database");
+const {
+    UserTest,
+    Test,
+    TestQuestion
+} = require("../database");
 
 class UserTestController {
     async createOrUpdateResult(req, res, next) {
@@ -16,7 +20,7 @@ class UserTestController {
 
             if (candidate) {
                 await candidate.update({
-                    isComplete: ((questionsCount - 3) < testResult),
+                    isComplete: ((questionsCount - 1) < testResult),
                     testResult,
                     testId,
                     userId

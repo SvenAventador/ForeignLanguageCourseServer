@@ -34,12 +34,9 @@ class Languages {
     async create(req, res, next) {
         const {languageName} = req.body
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.badRequest({
-                    errors: errors.array()
-                }))
-            }
+            const candidate = await Language.findOne({where: {languageName}})
+            if (candidate)
+                return next(ErrorHandler.conflict(`Иностранный язык под названием ${languageName} уже существует!`))
 
             const language = await Language.create({
                 languageName
@@ -55,43 +52,14 @@ class Languages {
         const {languageName} = req.body
 
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.badRequest({
-                    errors: errors.array()
-                }))
-            }
-
             const candidate = await Language.findByPk(id)
+            if (candidate && languageName !== candidate.languageName && await Language.findOne({where: {languageName}}))
+                return next(ErrorHandler.conflict(`Иностранный язык под названием ${languageName} уже существует!`))
             const candidateToUpdate = {
                 languageName: languageName || candidate.languageName
             }
             await candidate.update(candidateToUpdate)
             return res.json({candidate})
-        } catch (error) {
-            return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
-        }
-    }
-
-    async deleteOne(req, res, next) {
-        const {id} = req.query
-
-        try {
-            const language = await Language.findByPk(id)
-            await language.destroy()
-            return res.status(200).json({message: 'Данный иностранный язык успешно удален!'})
-        } catch (error) {
-            return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
-        }
-    }
-
-    async deleteAll(req, res, next) {
-        try {
-            const language = await Language.findAll()
-            language.map(async (item) => {
-                await item.destroy()
-            })
-            return res.status(200).json({message: 'Все иностранные языки успешно удалены!'})
         } catch (error) {
             return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
         }

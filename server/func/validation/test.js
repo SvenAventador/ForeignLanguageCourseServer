@@ -33,6 +33,10 @@ const validateCreate = () => {
                 const courseContent = await CourseContent.findByPk(courseContentId)
                 if (!courseContent)
                     return Promise.reject('Данной главы не найдено :/')
+
+                const testCandidate = await Test.findOne({where: {courseContentId}})
+                if (testCandidate)
+                    return Promise.reject('У данной главы уже есть тест :/')
             }),
         body('questions')
             .isArray()

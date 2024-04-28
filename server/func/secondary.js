@@ -8,7 +8,8 @@ class Secondary {
         userRole,
         userSurname = null,
         userName = null,
-        userPatronymic = null
+        userPatronymic = null,
+        userPhone = null
     ) {
         const payload = {
             id,
@@ -17,7 +18,8 @@ class Secondary {
             userRole,
             userSurname,
             userName,
-            userPatronymic
+            userPatronymic,
+            userPhone
         }
 
         return jwt.sign(

@@ -3,7 +3,8 @@ const {
     Course,
     CourseContent,
     Duration,
-    Language, UserCourse, ChapterContent, ChapterGallery
+    Language,
+    UserCourse
 } = require("../database")
 const {
     extname,
@@ -14,7 +15,6 @@ const {validationResult} = require("express-validator")
 const {Op} = require("sequelize");
 
 class Courses {
-
     async getOne(req, res, next) {
         try {
             const errors = validationResult(req)
@@ -94,15 +94,10 @@ class Courses {
 
         const {courseImage} = req.files || {}
         const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif']
-
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.badRequest({
-                    errors: errors.array()
-                }))
-            }
-
+            const courseCandidate = await Course.findOne({where: {courseName}})
+            if (courseCandidate)
+                return next(ErrorHandler.conflict(`Курс с названием ${courseName} уже существует!`))
             if (courseImage === undefined)
                 return next(ErrorHandler.badRequest('Пожалуйста, выберите изображение!'))
             const fileExtension = extname(courseImage.name).toLowerCase()
@@ -148,21 +143,18 @@ class Courses {
             courseImageFileName = v4() + fileExtension;
 
             try {
-                await courseImage.mv(resolve(__dirname, '..', 'static', courseImageFileName));
+                await courseImage.mv(resolve(__dirname, '..', 'static', 'img', courseImageFileName));
             } catch (error) {
                 return next(ErrorHandler.internal(`Ошибка при сохранении изображения: ${error}`));
             }
         }
 
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.badRequest({
-                    errors: errors.array()
-                }))
-            }
+            const candidate = await Course.findByPk(id);
 
-            const candidate = await Course.findByPk(id)
+            if (candidate && courseName !== candidate.courseName && await Course.findOne({where: {courseName}})) {
+                return next(ErrorHandler.conflict(`Курс с названием ${courseName} уже существует!`));
+            }
             const courseToUpdate = {
                 courseName: courseName || candidate.courseName,
                 courseDescription: courseDescription || candidate.courseDescription,
@@ -225,6 +217,10 @@ class Courses {
                 }))
             }
 
+            const courseCandidate = await UserCourse.findOne({where: {userId, courseId}})
+            if (courseCandidate)
+                return res.json({message: "Вы уже записаны на курс! Продолжайте обучаться :)"})
+
             const candidate = await UserCourse.create({
                 userId,
                 courseId
@@ -234,6 +230,28 @@ class Courses {
             return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
         }
     }
+
+    async getAdminGetAll(req, res, next) {
+        try {
+            const courses = await Course.findAll({
+                include: [
+                    {
+                        model: CourseContent
+                    },
+                    {
+                        model: Language
+                    },
+                    {
+                        model: Duration
+                    }
+                ]
+            })
+            return res.json({courses})
+        } catch (error) {
+            return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
+        }
+    }
+
 }
 
 module.exports = new Courses()

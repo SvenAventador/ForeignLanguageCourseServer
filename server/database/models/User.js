@@ -1,4 +1,4 @@
-const {DataTypes} = require('sequelize')
+    const {DataTypes} = require('sequelize')
 const sequelize = require('../db')
 
 const User = sequelize.define('user', {
@@ -39,6 +39,11 @@ const User = sequelize.define('user', {
     userPatronymic: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    userPhone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true
     }
 })
 

@@ -1,6 +1,7 @@
 const {body} = require("express-validator");
 const {User} = require("../../database");
 const {compareSync} = require("bcrypt");
+
 const validateRegistration = () => {
     return [
         body('userNickname')
@@ -36,13 +37,16 @@ const validateLogin = () => {
                     return Promise.reject(`Пользователя с почтой ${userEmail} не найдено!`)
             }),
         body('userPassword')
+            .notEmpty()
+            .withMessage('Пожалуйста, введите пароль!')
             .isLength({min: 8})
             .withMessage('Минимальная длина пароля 8 символов!')
             .custom(async (userPassword, {req}) => {
-                const {userEmail} = req.body
-                const candidateOnEmail = await User.findOne({where: {userEmail}})
-                if (!compareSync(userPassword, candidateOnEmail.userPassword))
-                    return Promise.reject('Введенные Вами пароли не верны!')
+                const {userEmail} = req.body;
+                const candidateOnEmail = await User.findOne({where: {userEmail}});
+                if (candidateOnEmail && !compareSync(userPassword, candidateOnEmail.userPassword)) {
+                    return Promise.reject('Введенные Вами пароли не верны!');
+                }
             })
     ]
 }

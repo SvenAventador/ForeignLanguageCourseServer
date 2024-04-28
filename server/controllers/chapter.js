@@ -2,7 +2,7 @@ const ErrorHandler = require("../errors/errorHandler");
 const {
     CourseContent,
     ChapterGallery,
-    ChapterContent
+    ChapterContent, Test
 } = require("../database");
 const {
     extname,
@@ -57,13 +57,6 @@ class ChapterController {
         const allowedVideoExtensions = ['.mp4', '.avi', '.mov']
 
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.badRequest({
-                    errors: errors.array()
-                }))
-            }
-
             if (chapterImage === undefined)
                 return next(ErrorHandler.badRequest('Пожалуйста, выберите изображение!'))
             const fileExtension = extname(chapterImage.name).toLowerCase()
@@ -72,12 +65,15 @@ class ChapterController {
             let fileName = v4() + ".jpg"
             await chapterImage.mv(resolve(__dirname, '..', 'static', 'img', fileName))
 
+            const chapterCandidate = await CourseContent.findOne({where: {chapterName}})
             const courseContent = await CourseContent.create({
                 chapterName,
                 chapterDescription,
                 chapterImage: fileName,
                 courseId
             })
+
+
 
             chapterContent = JSON.parse(chapterContent)
             await ChapterContent.bulkCreate(chapterContent.map((item) => ({
@@ -112,7 +108,7 @@ class ChapterController {
                 courseContentId: courseContent.id
             })))
 
-            return res.json({message: 'ВАУ'})
+            return res.json({courseContent})
         } catch (error) {
             return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
         }
@@ -156,13 +152,24 @@ class ChapterController {
     }
 
     async deleteAll(req, res, next) {
+        const {courseId} = req.query
+
         try {
-            const contents = await CourseContent.findAll()
+            const contents = await CourseContent.findAll({where: {courseId}})
             contents.map(async (item) => {
                 await item.destroy()
             })
 
             return res.status(200).json({message: "Все главы успешно удалены!"})
+        } catch (error) {
+            return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
+        }
+    }
+
+    async getAllChapterWithTest(req, res, next) {
+        try {
+            const chapters = await CourseContent.findAll({include: [Test]})
+            return res.json({chapters})
         } catch (error) {
             return next(ErrorHandler.internal(`Во время работы сервера произошла следующая ошибка: ${error}`))
         }

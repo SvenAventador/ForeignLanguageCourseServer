@@ -6,7 +6,8 @@ const {
 const {
     Course,
     Language,
-    Duration, User
+    Duration,
+    User
 } = require("../../database");
 
 const validateCourseParam = () => {
@@ -18,82 +19,6 @@ const validateCourseParam = () => {
                 const course = await Course.findByPk(id)
                 if (!course)
                     return Promise.reject(`Курса под номером ${id} не найдено!`)
-            })
-    ]
-}
-
-const validateCreateCourse = () => {
-    return [
-        body('courseName')
-            .notEmpty()
-            .withMessage('Пожалуйста, введите название курса!')
-            .custom(async (courseName) => {
-                const candidate = await Course.findOne({where: {courseName}})
-                if (candidate)
-                    return Promise.reject(`Курс под названием ${courseName} уже существует!`)
-            }),
-        body('courseDescription')
-            .notEmpty()
-            .withMessage('Пожалуйста, введите описание курса!'),
-        body('courseLevel')
-            .custom(async (courseLevel) => {
-                const level = ['Начинающий', 'Элементарный', 'Средний', 'Продвинутый']
-                if (!level.includes(courseLevel))
-                    return Promise.reject('Выберите корректный уровень курса!')
-            }),
-        body('languageId')
-            .custom(async (languageId) => {
-                const candidate = await Language.findByPk(languageId)
-                if (!candidate)
-                    return Promise.reject('Пожалуйста, выберите корректный язык!')
-            }),
-        body('durationId')
-            .custom(async (durationId) => {
-                const candidate = await Duration.findByPk(durationId)
-                if (!candidate)
-                    return Promise.reject('Пожалуйста, выберите корректную длительность курса!')
-            })
-    ]
-}
-
-const validateUpdateCourse = () => {
-    return [
-        query('id')
-            .isInt()
-            .withMessage('Пожалуйста, введите корректный идентификатор!')
-            .custom(async (id) => {
-                const course = await Course.findByPk(id)
-                if (!course)
-                    return Promise.reject(`Курса под номером ${id} не найдено!`)
-            }),
-        body('courseName')
-            .notEmpty()
-            .withMessage('Пожалуйста, введите название курса!')
-            .custom(async (courseName) => {
-                const candidate = await Course.findOne({where: {courseName}})
-                if (candidate && courseName !== candidate.courseName && await Course.findOne({where: {courseName}}))
-                    return Promise.reject(`Курс с названием ${courseName} уже существует!`)
-            }),
-        body('courseDescription')
-            .notEmpty()
-            .withMessage('Пожалуйста, введите описание курса!'),
-        body('courseLevel')
-            .custom(async (courseLevel) => {
-                const level = ['Начинающий', 'Элементарный', 'Средний', 'Продвинутый']
-                if (!level.includes(courseLevel))
-                    return Promise.reject('Выберите корректный уровень курса!')
-            }),
-        body('languageId')
-            .custom(async (languageId) => {
-                const candidate = await Language.findByPk(languageId)
-                if (!candidate)
-                    return Promise.reject('Пожалуйста, выберите корректный язык!')
-            }),
-        body('durationId')
-            .custom(async (durationId) => {
-                const candidate = await Duration.findByPk(durationId)
-                if (!candidate)
-                    return Promise.reject('Пожалуйста, выберите корректную длительность курса!')
             })
     ]
 }
@@ -121,7 +46,5 @@ const validateEnroll = () => {
 
 module.exports = {
     validateCourseParam,
-    validateCreateCourse,
-    validateUpdateCourse,
     validateEnroll
 }

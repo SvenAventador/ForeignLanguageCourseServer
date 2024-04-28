@@ -8,6 +8,6 @@ const {
 
 routes.get('/', validateGetOneParam(), TestsController.getOne)
 routes.post('/', validateCreate(), TestsController.create)
-routes.delete('/', validateGetOneParam(), TestsController.deleteOne)
+routes.delete('/', TestsController.deleteOne)
 
 module.exports = routes

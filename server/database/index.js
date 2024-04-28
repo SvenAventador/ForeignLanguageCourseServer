@@ -10,6 +10,7 @@ const UserCourse = require("./models/UserCourse");
 const UserTest = require("./models/UserTest");
 const Duration = require("./models/Duration");
 const ChapterContent = require("./models/ChapterContent");
+const Certificate = require("./models/Certificate");
 
 User.belongsToMany(Course, {
     through: UserCourse
@@ -49,7 +50,11 @@ TestQuestion.belongsTo(Test)
 TestQuestion.hasMany(TestAnswer)
 TestAnswer.belongsTo(TestQuestion)
 
+User.hasMany(Certificate)
+Certificate.belongsTo(User)
+
 module.exports = {
+    Certificate,
     ChapterContent,
     ChapterGallery,
     Course,

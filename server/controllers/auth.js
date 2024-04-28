@@ -2,7 +2,7 @@ const ErrorHandler = require("../errors/errorHandler");
 const {validationResult} = require("express-validator");
 const {
     hashSync,
-    genSaltSync
+    genSaltSync, compareSync
 } = require('bcrypt')
 const {User} = require("../database");
 const SecondaryFunction = require("../func/secondary");
@@ -62,7 +62,11 @@ class Auth {
                 candidate.id,
                 candidate.userNickname,
                 candidate.userEmail,
-                candidate.userRole
+                candidate.userRole,
+                candidate.userSurname,
+                candidate.userName,
+                candidate.userPatronymic,
+                candidate.userPhone
             )
 
             return res.json({token})
@@ -76,9 +80,12 @@ class Auth {
             req.user.id,
             req.user.userNickname,
             req.user.userEmail,
-            req.user.userRole
+            req.user.userRole,
+            req.user.userSurname,
+            req.user.userName,
+            req.user.userPatronymic,
+            req.user.userPhone
         )
-
         return res.json({token})
     }
 

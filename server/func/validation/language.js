@@ -1,6 +1,5 @@
 const {
-    body,
-    query,
+    query
 } = require('express-validator')
 const {
     Language,

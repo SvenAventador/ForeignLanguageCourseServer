@@ -1,6 +1,5 @@
 const {
-    param,
-    body
+    param
 } = require("express-validator");
 const {
     User

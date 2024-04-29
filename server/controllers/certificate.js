@@ -108,7 +108,7 @@ class CertificateController {
             doc.font('./public/fonts/NotoSansJP-Bold.otf')
                 .fontSize(24)
                 .fill('#021c27')
-                .text(`${(user.userSurname && user.userName && user.userPatronymic) ? (user.userSurname + ' ' + user.userName + ' ' + user.userPatronymic) : (user.userNickname)}`, {
+                .text(`${(user.userSurname && user.userName) ? (user.userSurname + ' ' + user.userName) : (user.userNickname)}`, {
                     align: 'center',
                 });
 

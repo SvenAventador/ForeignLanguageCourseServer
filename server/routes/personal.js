@@ -2,7 +2,6 @@ const Router = require('express')
 const routes = new Router()
 const PersonalController = require('../controllers/personal')
 const {
-    validateUpdateUser,
     validateParams
 } = require("../func/validation/personal");
 

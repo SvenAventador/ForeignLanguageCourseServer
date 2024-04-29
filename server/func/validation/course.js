@@ -1,12 +1,9 @@
 const {
     body,
-    query,
     param
 } = require('express-validator')
 const {
     Course,
-    Language,
-    Duration,
     User
 } = require("../../database");
 

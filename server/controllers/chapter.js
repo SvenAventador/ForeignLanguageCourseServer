@@ -2,7 +2,8 @@ const ErrorHandler = require("../errors/errorHandler");
 const {
     CourseContent,
     ChapterGallery,
-    ChapterContent, Test
+    ChapterContent,
+    Test
 } = require("../database");
 const {
     extname,
@@ -65,15 +66,12 @@ class ChapterController {
             let fileName = v4() + ".jpg"
             await chapterImage.mv(resolve(__dirname, '..', 'static', 'img', fileName))
 
-            const chapterCandidate = await CourseContent.findOne({where: {chapterName}})
             const courseContent = await CourseContent.create({
                 chapterName,
                 chapterDescription,
                 chapterImage: fileName,
                 courseId
             })
-
-
 
             chapterContent = JSON.parse(chapterContent)
             await ChapterContent.bulkCreate(chapterContent.map((item) => ({
@@ -85,14 +83,11 @@ class ChapterController {
                 return next(ErrorHandler.badRequest('Пожалуйста, выберите галерею видео!'))
             }
 
-            const validVideoFiles = chapterGalleryContent.filter(item => {
+            let galleryFiles = Array.isArray(chapterGalleryContent) ? chapterGalleryContent : [chapterGalleryContent];
+            const validVideoFiles = galleryFiles.filter(item => {
                 const fileExtension = extname(item.name).toLowerCase()
                 return allowedVideoExtensions.includes(fileExtension)
             })
-
-            if (validVideoFiles.length !== chapterGalleryContent.length) {
-                return next(ErrorHandler.badRequest('Пожалуйста, загрузите видеофайлы в формате: mp4, avi, mov!'))
-            }
 
             const videoFilesPromises = validVideoFiles.map(async (videoItem) => {
                 const fileExtension = extname(videoItem.name).toLowerCase()

@@ -2,7 +2,7 @@ const ErrorHandler = require("../errors/errorHandler");
 const {validationResult} = require("express-validator");
 const {
     hashSync,
-    genSaltSync, compareSync
+    genSaltSync
 } = require('bcrypt')
 const {User} = require("../database");
 const SecondaryFunction = require("../func/secondary");
